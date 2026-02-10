@@ -5,3 +5,6 @@ drf-yasg               # For Swagger Documentation
 django-filter          # For advanced filtering later
 Pillow                 # For image handling
 pytest-django          # For testing
+djangorestframework-simplejwt==5.3.1
+pytest-django==4.5.2
+pytest==7.4.0
