@@ -1,0 +1,28 @@
+# Version Control
+.git
+.gitignore
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Local Environment & Data
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+.env
+db.sqlite3
+media/
+static/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
