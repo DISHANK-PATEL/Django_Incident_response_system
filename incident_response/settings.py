@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'users',
     'incidents',
     'responders',
+    'drf_spectacular',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -144,6 +145,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # JWT Specific Settings
@@ -152,4 +154,14 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Incident Response System API',
+    'DESCRIPTION': 'Real-time incident management and responder coordination.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # This allows Swagger to handle our JWT Bearer tokens
+    'COMPONENT_SPLIT_PATCH': True,
+    'COMPONENT_NO_READ_ONLY_FIELDS': True,
 }
