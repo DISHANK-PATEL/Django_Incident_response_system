@@ -3,17 +3,20 @@ from .models import Incident
 from responders.models import ResponderTeam
 
 class IncidentReportSerializer(serializers.ModelSerializer):
-    reported_by = serializers.ReadOnlyField(source='reported_by.username')
     
-    assigned_team_name = serializers.ReadOnlyField(source='assigned_team.name')
-
+    assigned_team_name = serializers.CharField(source='assigned_team.team_name', read_only=True)
+    attachment = serializers.ImageField(required=False, allow_null=True)
+    
     class Meta:
         model = Incident
         fields = [
-            'id', 'title', 'description', 'category', 
-            'severity', 'location', 'current_status', 
-            'reported_by', 'assigned_team', 'assigned_team_name', 'created_at'
+            'id', 'title', 'description', 'category', 'severity', 
+            'location', 'current_status', 'assigned_team', 
+            'assigned_team_name',  
+            'attachment',         
+            'reported_by'
         ]
+        read_only_fields = ['reported_by', 'assigned_team_name']
 
     def validate(self, data):
         """
