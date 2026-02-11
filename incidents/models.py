@@ -20,7 +20,8 @@ class Incident(models.Model):
         SAFETY = 'SAFETY', 'Safety'
         IT = 'IT', 'IT Outage'
         FACILITY = 'FACILITY', 'Facility Breakdown'
-
+        
+    attachment = models.ImageField(upload_to='incident_attachments/%Y/%m/%d/', null=True, blank=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
     description = models.TextField()
