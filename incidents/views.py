@@ -1,3 +1,4 @@
+from django.db.models import Q, Case, When, Value, IntegerField
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -18,11 +19,8 @@ class IncidentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.role == 'ADMIN':
-            queryset = Incident.objects.all()
-            unresolved = self.request.query_params.get('unresolved', None)
-            if unresolved == 'true':
-                queryset = queryset.exclude(current_status='RESOLVED')
-            return queryset.order_by('-created_at')
+            return Incident.objects.all().order_by('-created_at')
+        return Incident.objects.filter(reported_by=user).order_by('-created_at')
             
         return Incident.objects.filter(reported_by=user).order_by('-created_at')
 
@@ -31,6 +29,43 @@ class IncidentViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(_status_changer=self.request.user)
+    
+    @action(detail=False, methods=['get'], url_path='unresolved')
+    def unresolved(self, request):
+        queryset = self.get_queryset().exclude(current_status='RESOLVED')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'], url_path='filter')
+    def filter_incidents(self, request):
+        category = request.query_params.get('category')
+        location = request.query_params.get('location')
+        queryset = self.get_queryset()
+        
+        if category:
+            queryset = queryset.filter(category=category)
+        if location:
+            queryset = queryset.filter(location__icontains=location)
+            
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='sort-severity')
+    def sort_severity(self, request):
+        queryset = self.get_queryset().annotate(
+            priority=Case(
+                When(severity='CRITICAL', then=Value(4)),
+                When(severity='HIGH', then=Value(3)),
+                When(severity='MEDIUM', then=Value(2)),
+                When(severity='LOW', then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            )
+        ).order_by('-priority', '-created_at')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    
 
     @action(detail=True, methods=['post'], url_path='updates')
     def add_update(self, request, pk=None):
