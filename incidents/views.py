@@ -1,20 +1,46 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from .models import Incident
-from .serializers import IncidentReportSerializer
+from rest_framework.decorators import action
+from .models import Incident, IncidentStatusHistory, IncidentUpdate
+from .serializers import (
+    IncidentReportSerializer, 
+    StatusHistorySerializer, 
+    IncidentUpdateSerializer
+)
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 class IncidentViewSet(viewsets.ModelViewSet):
-    """
-    This ViewSet handles:
-    - GET /api/incidents/reports/ (List all)
-    - POST /api/incidents/reports/ (Create new)
-    - GET /api/incidents/reports/{id}/ (Detail)
-    """
     queryset = Incident.objects.all().order_by('-created_at')
     serializer_class = IncidentReportSerializer
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'ADMIN':
+            queryset = Incident.objects.all()
+            unresolved = self.request.query_params.get('unresolved', None)
+            if unresolved == 'true':
+                queryset = queryset.exclude(current_status='RESOLVED')
+            return queryset.order_by('-created_at')
+            
+        return Incident.objects.filter(reported_by=user).order_by('-created_at')
+
     def perform_create(self, serializer):
         serializer.save(reported_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(last_modified_by=self.request.user)
+
+    @action(detail=True, methods=['get'], url_path='timeline')
+    def get_timeline(self, request, pk=None):
+        incident = self.get_object()
+        
+        history = StatusHistorySerializer(incident.status_history.all(), many=True).data
+        for h in history: h['event_type'] = 'AUDIT_LOG'
+
+        updates = IncidentUpdateSerializer(incident.official_updates.all(), many=True).data
+        for u in updates: u['event_type'] = 'OFFICIAL_UPDATE'
+
+        timeline = sorted(history + updates, key=lambda x: x['created_at'], reverse=True)
+        return Response(timeline)

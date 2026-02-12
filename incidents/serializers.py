@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Incident
+from .models import Incident, IncidentUpdate, IncidentStatusHistory
 from responders.models import ResponderTeam
 
 class IncidentReportSerializer(serializers.ModelSerializer):
@@ -49,3 +49,17 @@ class IncidentReportSerializer(serializers.ModelSerializer):
                     })
 
         return data
+
+class IncidentUpdateSerializer(serializers.ModelSerializer):
+    author_name = serializers.ReadOnlyField(source='author.username')
+
+    class Meta:
+        model = IncidentUpdate
+        fields = ['id', 'author_name', 'message', 'created_at']
+
+class StatusHistorySerializer(serializers.ModelSerializer):
+    changed_by_name = serializers.ReadOnlyField(source='changed_by.username')
+
+    class Meta:
+        model = IncidentStatusHistory
+        fields = ['old_status', 'new_status', 'changed_by_name', 'created_at']

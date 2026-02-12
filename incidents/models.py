@@ -39,3 +39,20 @@ class Incident(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.current_status}"
+
+class IncidentUpdate(models.Model):
+    incident = models.ForeignKey(Incident, on_delete=models.CASCADE, related_name='official_updates')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+class IncidentStatusHistory(models.Model):
+    incident = models.ForeignKey(Incident, on_delete=models.CASCADE, related_name='status_history')
+    old_status = models.CharField(max_length=20)
+    new_status = models.CharField(max_length=20)
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
