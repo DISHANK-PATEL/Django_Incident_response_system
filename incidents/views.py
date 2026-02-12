@@ -30,7 +30,16 @@ class IncidentViewSet(viewsets.ModelViewSet):
         serializer.save(reported_by=self.request.user)
 
     def perform_update(self, serializer):
-        serializer.save(last_modified_by=self.request.user)
+        serializer.save(_status_changer=self.request.user)
+
+    @action(detail=True, methods=['post'], url_path='updates')
+    def add_update(self, request, pk=None):
+        incident = self.get_object()
+        serializer = IncidentUpdateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(incident=incident, author=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['get'], url_path='timeline')
     def get_timeline(self, request, pk=None):
