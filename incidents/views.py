@@ -1,4 +1,4 @@
-from django.db.models import Q, Case, When, Value, IntegerField
+from django.db.models import Q, Case, When, Value, IntegerField, Avg, Count, F
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -88,3 +88,23 @@ class IncidentViewSet(viewsets.ModelViewSet):
 
         timeline = sorted(history + updates, key=lambda x: x['created_at'], reverse=True)
         return Response(timeline)
+
+    @action(detail=False, methods=['get'], url_path='metrics')
+    def get_metrics(self,request):
+    
+        avg_tta = Incident.objects.filter(acknowledged_at__isnull=False).annotate(
+            duration=F('acknowledged_at') - F('created_at')
+        ).aggregate(Avg('duration'))['duration__avg']
+
+        avg_ttr = Incident.objects.filter(resolved_at__isnull=False).annotate(
+            duration=F('resolved_at') - F('created_at')
+        ).aggregate(Avg('duration'))['duration__avg']
+
+        metrics = {
+            "avg_acknowledgement_time": str(avg_tta) if avg_tta else "N/A",
+            "avg_resolution_time": str(avg_ttr) if avg_ttr else "N/A",
+            "unresolved_incidents": Incident.objects.exclude(current_status='RESOLVED').count(),
+            "severity_breakdown": Incident.objects.values('severity').annotate(count=Count('id')),
+            "category_breakdown": Incident.objects.values('category').annotate(count=Count('id'))
+        }
+        return Response(metrics)

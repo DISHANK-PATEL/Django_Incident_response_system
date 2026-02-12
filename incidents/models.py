@@ -28,6 +28,8 @@ class Incident(models.Model):
     category = models.CharField(max_length=50, choices=Category.choices)
     severity = models.CharField(max_length=20, choices=Severity.choices, default=Severity.LOW)
     location = models.CharField(max_length=255)
+    acknowledged_at = models.DateTimeField(null=True, blank=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
     
     reported_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reported_incidents')
     assigned_team = models.ForeignKey('responders.ResponderTeam', on_delete=models.SET_NULL, null=True, blank=True, related_name='incidents')
