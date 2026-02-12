@@ -145,7 +145,9 @@ Make sure you have the following installed:
 - Docker Compose
 
 ---
-
+```bash
+git clone https://github.com/DISHANK-PATEL/Django_Incident_response_system.git
+```
 ## Start Services
 Build and start the containers:
 
