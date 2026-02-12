@@ -116,11 +116,8 @@ Implemented Features
 | **Documentation**     | OpenAPI / Swagger             |
 | **Testing**           | Django Test Framework         |
 
+## Project Structure
 ---
-
-    
-
-Project Structure
 ```
 
 Django_Incident_response_system/
