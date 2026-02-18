@@ -191,6 +191,65 @@ http://localhost:8000/api/docs/
 <img width="1096" height="542" alt="image" src="https://github.com/user-attachments/assets/10df6b23-2e7b-4099-bfa7-44f5d93c6127" />
 
 ---
+---
+
+## Sample Screenshots
+
+### 1. Creating a User
+<img src="https://github.com/user-attachments/assets/f7a7e9b9-58a4-4a70-acb8-5806de915e88" alt="Creating User" width="100%" />
+
+---
+
+### 2. Login via JWT Authentication
+<img src="https://github.com/user-attachments/assets/7464a0cd-9d0b-4216-8b71-e16f26745e3a" alt="JWT Login" width="100%" />
+
+---
+
+### 3. Admin Creating a Responding DevOps Team
+<img src="https://github.com/user-attachments/assets/d60489a1-e90e-41e5-a405-99cd9f80c129" alt="Admin Creating DevOps Team" width="100%" />
+
+---
+
+### 4. User Reporting an Incident with Image Evidence
+<img src="https://github.com/user-attachments/assets/900c4486-d059-4a8e-8b3a-c7c8a9536277" alt="User Reporting Incident" width="100%" />
+
+---
+
+### 5. Viewing the Uploaded Incident Image
+<img src="https://github.com/user-attachments/assets/1e8f5fe7-a06b-45ce-ac46-e80fc5b542c8" alt="Viewing Uploaded Image" width="100%" />
+
+---
+
+### 6. Admin Assigning a Responding Team to the Incident
+<img src="https://github.com/user-attachments/assets/673bbdd8-20d6-4a58-8bcc-154646275a7e" alt="Assigning Team" width="100%" />
+
+---
+
+### 7. Responder Changing the Incident Status
+<img src="https://github.com/user-attachments/assets/6d8fd64a-af84-498f-af3b-5acdfc3134df" alt="Changing Status" width="100%" />
+
+---
+
+### 8. Checking the Timeline of an Incident
+<img src="https://github.com/user-attachments/assets/f9699eef-ec4d-4297-82a2-86d5008ad61b" alt="Incident Timeline" width="100%" />
+
+---
+
+### 9. Viewing SLA Metrics
+<img src="https://github.com/user-attachments/assets/83c268ef-2289-4365-82be-5767884a7d1b" alt="SLA Metrics" width="100%" />
+
+---
+
+### 10. Displaying All Incident Details Sorted by Severity
+<img src="https://github.com/user-attachments/assets/d1ee76bf-7be5-4d1d-9054-e6339388cc60" alt="Incidents Sorted by Severity" width="100%" />
+
+---
+
+### 11. Advanced Filtering Based on Specifications
+<img src="https://github.com/user-attachments/assets/f19fc117-615f-4608-93a9-d1c8ae3a9971" alt="Advanced Filtering" width="100%" />
+
+
+
 ## Learning Objectives Demonstrated
 
 This project showcases practical experience and applied understanding in the following areas:
